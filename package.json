@@ -1,0 +1,13 @@
+{
+  "name": "redis-tool",
+  "scripts": {
+    "start": "concurrently pnpm:start-*",
+    "start-client": "pnpm --filter redis-tool-client start",
+    "start-server": "pnpm --filter redis-tool-server start"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.3"
+  }
+}
