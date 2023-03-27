@@ -7,14 +7,16 @@ import { trpc } from "./trpc";
 import { Output } from "./Output";
 
 export const App = () => {
-  const queryClient = new QueryClient();
-  const trpcClient = trpc.createClient({
-    links: [
-      httpBatchLink({
-        url: "http://localhost:5555/trpc",
-      }),
-    ],
-  });
+  const [queryClient] = useState(() => new QueryClient());
+  const [trpcClient] = useState(() =>
+    trpc.createClient({
+      links: [
+        httpBatchLink({
+          url: "http://localhost:5555/trpc",
+        }),
+      ],
+    })
+  );
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
