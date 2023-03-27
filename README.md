@@ -1,5 +1,7 @@
 # Redis Tool
 
+A web interface for interacting with Redis (in a very limited capacity).
+
 ## Setup
 
 Define your redis credentials in a server .env file:
