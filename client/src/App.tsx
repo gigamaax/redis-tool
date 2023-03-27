@@ -22,14 +22,14 @@ export const App = () => {
         <Header>
           <HeaderContent>
             <H1>Redis Tool</H1>
-            <p>A barebones Redis management utility</p>
+            <p>A barebones Redis utility</p>
           </HeaderContent>
         </Header>
         <Content>
           <KeysApplet />
           <GetApplet />
-          <DeleteApplet />
-          <FlushAllApplet />
+          <DelApplet />
+          {/* <FlushAllApplet /> */}
         </Content>
       </QueryClientProvider>
     </trpc.Provider>
@@ -55,8 +55,8 @@ const GetApplet = () => {
         <a href="#get">GET</a>
       </H2>
       <p>Get the value of a key</p>
-      <form onSubmit={onExecute}>
-        <label htmlFor="get-key">Key</label>
+      <Form onSubmit={onExecute}>
+        <TextInputLabel htmlFor="get-key">Key</TextInputLabel>
         <TextInput
           id="get-key"
           type="text"
@@ -67,7 +67,7 @@ const GetApplet = () => {
           value="Execute GET"
           disabled={!Boolean(input)}
         />
-      </form>
+      </Form>
       <Output
         text={data ? JSON.stringify(JSON.parse(data), undefined, 2) : ""}
       />
@@ -95,8 +95,8 @@ const KeysApplet = () => {
         <a href="#keys">KEYS</a>
       </H2>
       <p>Find all keys matching the given pattern</p>
-      <form onSubmit={onExecute}>
-        <label htmlFor="keys-pattern">Pattern</label>
+      <Form onSubmit={onExecute}>
+        <TextInputLabel htmlFor="keys-pattern">Pattern</TextInputLabel>
         <TextInput
           id="keys-pattern"
           type="text"
@@ -107,13 +107,13 @@ const KeysApplet = () => {
           value="Execute KEYS"
           disabled={!Boolean(input)}
         />
-      </form>
+      </Form>
       <Output text={keys} />
     </Section>
   );
 };
 
-const DeleteApplet = () => {
+const DelApplet = () => {
   const [input, setInput] = useState<string>("");
 
   const mutation = trpc.delete.useMutation();
@@ -134,8 +134,8 @@ const DeleteApplet = () => {
         <a href="#del">DEL</a>
       </H2>
       <p>Delete a key</p>
-      <form onSubmit={onExecute}>
-        <label htmlFor="del-key">Key</label>
+      <Form onSubmit={onExecute}>
+        <TextInputLabel htmlFor="del-key">Key</TextInputLabel>
         <TextInput
           id="del-key"
           type="text"
@@ -146,7 +146,7 @@ const DeleteApplet = () => {
           value="Execute DEL"
           disabled={!Boolean(input)}
         />
-      </form>
+      </Form>
       {mutation.error ? (
         <Output text={mutation.error.message} />
       ) : (
@@ -174,14 +174,14 @@ const FlushAllApplet = () => {
   }
 
   return (
-    <Section id="flushall">
+    <Section id="flushall" danger>
       <H2>
         <a href="#flushall">FLUSHALL</a>
       </H2>
       <p>Remove all keys from all databases</p>
-      <form onSubmit={onExecute}>
+      <Form onSubmit={onExecute}>
         <SubmitButton type="submit" value="Execute FLUSHALL" />
-      </form>
+      </Form>
       <Output text={mutation.data || ""} />
     </Section>
   );
@@ -204,8 +204,13 @@ const H2 = styled.h2`
   }
 `;
 
-const Section = styled.section`
-  margin-bottom: 2rem;
+const Section = styled.section<{ danger?: boolean }>`
+  padding: 1rem;
+  border-radius: 8px;
+  border: ${(p) => p.danger && "1px solid red"};
+  //background: ${(p) => p.danger && "mistyrose"};
+  margin-bottom: 1rem;
+
   p {
     color: #555555;
   }
@@ -213,14 +218,21 @@ const Section = styled.section`
 
 const SubmitButton = styled.input``;
 
-const TextInput = styled.input`
-  margin: 0 0.5rem;
-  font-family: monospace;
-  min-width: 30vw;
+const TextInputLabel = styled.label`
+  margin-right: 0.5rem;
 `;
 
+const TextInput = styled.input`
+  margin-right: 0.5rem;
+  font-family: monospace;
+  min-width: 30vw;
+  height: 1.5rem;
+`;
+
+const Form = styled.form``;
+
 const HeaderContent = styled.div`
-  padding: 0.5rem 1rem;
+  padding: 1rem 2rem;
   color: black;
 
   p {
@@ -230,7 +242,7 @@ const HeaderContent = styled.div`
 
 const Header = styled.header`
   background: lightcoral;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 `;
 
 const Content = styled.main`
