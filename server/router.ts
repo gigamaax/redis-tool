@@ -22,6 +22,18 @@ export const router = t.router({
   get: t.procedure.input(z.string()).query(async (req) => {
     return (await redis.get(req.input)) || "";
   }),
+  set: t.procedure
+    .input(z.object({ key: z.string(), value: z.string() }))
+    .mutation(async (req) => {
+      const { key, value } = req.input;
+      try {
+        JSON.parse(value);
+      } catch (e) {
+        const error = e as unknown as Error;
+        return error.message;
+      }
+      return (await redis.set(key, value)) || "";
+    }),
   delete: t.procedure.input(z.string()).mutation(async (req) => {
     return await redis.del(req.input);
   }),

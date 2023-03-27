@@ -30,11 +30,62 @@ export const App = () => {
         <Content>
           <KeysApplet />
           <GetApplet />
+          <SetApplet />
           <DelApplet />
           {/* <FlushAllApplet /> */}
         </Content>
       </QueryClientProvider>
     </trpc.Provider>
+  );
+};
+
+const SetApplet = () => {
+  const [key, setKey] = useState<string>("");
+  const [value, setValue] = useState<string>("");
+
+  const mutation = trpc.set.useMutation();
+
+  const onExecute = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const answer = window.confirm(
+      `You are attempting to set key ${key} with value ${value}. Any existing value will be overwritten. Continue?`
+    );
+    if (answer) {
+      mutation.mutate({ key, value });
+    }
+  };
+
+  return (
+    <Section id="set">
+      <H2>
+        <a href="#set">SET</a>
+      </H2>
+      <p>Set the string value of a key</p>
+      <Form onSubmit={onExecute}>
+        <TextInputLabel htmlFor="set-key">Key</TextInputLabel>
+        <TextInput
+          id="set-key"
+          type="text"
+          onChange={(e) => setKey(e.target.value)}
+        />
+        <TextInputLabel htmlFor="set-value">Value</TextInputLabel>
+        <TextInput
+          id="set-value"
+          type="text"
+          onChange={(e) => setValue(e.target.value)}
+        />
+        <SubmitButton
+          type="submit"
+          value="Execute SET"
+          disabled={!Boolean(key && value)}
+        />
+      </Form>
+      {mutation.error ? (
+        <Output text={mutation.error.message} />
+      ) : (
+        <Output text={mutation.data || ""} />
+      )}
+    </Section>
   );
 };
 
@@ -71,7 +122,7 @@ const GetApplet = () => {
         />
       </Form>
       <Output
-        text={data ? JSON.stringify(JSON.parse(data), undefined, 2) : ""}
+        text={data ? JSON.stringify(JSON.parse(data), undefined, 2) : data}
       />
     </Section>
   );

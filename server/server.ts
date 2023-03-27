@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import cors from "cors"
+import cors from "cors";
 import express from "express";
 
 import { router, createContext } from "./router";
