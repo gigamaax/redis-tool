@@ -25,4 +25,4 @@ These are hardcoded for no good reason.
 
 ## Operations
 
-This utility only supports `get`, `keys`, `del`, and `flushall`.
+This utility only supports `get`, `keys`, `set`, and `del`.
